@@ -1,0 +1,40 @@
+<div class="layout">
+
+  <!-- TOPBAR -->
+  <p-toolbar styleClass="topbar">
+    <div class="p-toolbar-group-left flex align-items-center gap-2">
+      <button
+        pButton
+        class="p-button-text p-button-plain md:hidden"
+        icon="pi pi-bars"
+        (click)="toggleSidebar()"
+      ></button>
+
+      <span class="app-title">Barber App</span>
+    </div>
+
+    <div class="p-toolbar-group-right flex align-items-center gap-2">
+      <p-avatar label="F" shape="circle"></p-avatar>
+      <button
+        pButton
+        class="p-button-text"
+        icon="pi pi-sign-out"
+        label="Salir"
+        (click)="logout()"
+      ></button>
+    </div>
+  </p-toolbar>
+
+  <!-- BODY -->
+  <div class="body">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" [class.open]="sidebarOpen()">
+      <p-panelMenu [model]="menu()" [multiple]="false"></p-panelMenu>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

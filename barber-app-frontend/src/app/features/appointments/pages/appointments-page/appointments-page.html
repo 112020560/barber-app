@@ -1,0 +1,138 @@
+<p-toast></p-toast>
+
+    <div class="flex flex-column gap-3">
+      <!-- Header -->
+      <div class="flex align-items-center justify-content-between">
+        <div>
+          <h2 class="m-0">Citas</h2>
+          <small class="text-600">Agenda diaria por barbero</small>
+        </div>
+
+        <button
+          pButton
+          icon="pi pi-refresh"
+          class="p-button-text"
+          label="Actualizar"
+          (click)="loadAgenda()"
+          [disabled]="!selectedBarberId"
+        ></button>
+      </div>
+
+      <!-- Filters -->
+      <div class="grid">
+        <div class="col-12 md:col-4">
+          <div class="flex flex-column gap-2">
+            <label>Barbería</label>
+            <p-select
+              [options]="barberShops()"
+              optionLabel="name"
+              optionValue="id"
+              [(ngModel)]="selectedBarberShopId"
+              placeholder="Selecciona barbería"
+              (onChange)="onBarberShopChanged()"
+            ></p-select>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-4">
+          <div class="flex flex-column gap-2">
+            <label>Barbero</label>
+            <p-select
+              [options]="barbers()"
+              optionLabel="user.name"
+              optionValue="id"
+              [(ngModel)]="selectedBarberId"
+              placeholder="Selecciona barbero"
+              [filter]="true"
+              (onChange)="loadAgenda()"
+            ></p-select>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-4">
+          <div class="flex flex-column gap-2">
+            <label>Fecha</label>
+            <p-date-picker
+              [(ngModel)]="selectedDate"
+                dateFormat="yy-mm-dd"
+               [showTime]="true"
+               [hourFormat]="'12'"
+              [showIcon]="true"
+              (onSelect)="loadAgenda()"
+            ></p-date-picker>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <p-table
+        [value]="appointments()"
+        [loading]="loading()"
+        [paginator]="true"
+        [rows]="10"
+        responsiveLayout="scroll"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 180px;">Hora</th>
+            <th>Cliente</th>
+            <th>Servicio</th>
+            <th style="width: 160px;">Estado</th>
+            <th style="width: 220px;" class="text-right">Acciones</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-row>
+          <tr>
+            <td class="font-semibold">
+              {{ formatHour(row.date) }}
+            </td>
+
+            <td>
+              {{ row.client?.name ?? row.clientId }}
+            </td>
+
+            <td>
+              {{ row.service?.name ?? row.serviceId }}
+            </td>
+
+            <td>
+              <p-tag
+                [severity]="statusSeverity(row.status)"
+                [value]="row.status"
+              ></p-tag>
+            </td>
+
+            <td class="text-right">
+              <button
+                pButton
+                icon="pi pi-check"
+                label="Confirmar"
+                class="p-button-text"
+                [disabled]="row.status === 'CONFIRMED'"
+                (click)="setStatus(row.id, 'CONFIRMED')"
+              ></button>
+
+              <button
+                pButton
+                icon="pi pi-times"
+                label="Cancelar"
+                class="p-button-text p-button-danger"
+                [disabled]="row.status === 'CANCELLED'"
+                (click)="setStatus(row.id, 'CANCELLED')"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">
+              <div class="text-center p-4 text-600">
+                No hay citas para esta fecha.
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>

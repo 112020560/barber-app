@@ -1,0 +1,119 @@
+<p-toast></p-toast>
+
+    <div class="flex flex-column gap-3">
+      <!-- Header -->
+      <div class="flex align-items-center justify-content-between">
+        <div>
+          <h2 class="m-0">Usuarios</h2>
+          <small class="text-600">Gestiona usuarios y roles</small>
+        </div>
+
+        <button pButton icon="pi pi-plus" label="Nuevo" (click)="openCreate()"></button>
+      </div>
+
+      <!-- Search -->
+      <div class="flex justify-content-end">
+        <span class="p-input-icon-left w-full md:w-20rem">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" class="w-full" placeholder="Buscar..."
+                 (input)="filter = $any($event.target).value" />
+        </span>
+      </div>
+
+      <!-- Table -->
+      <p-table
+        [value]="filteredUsers()"
+        [loading]="loading()"
+        [paginator]="true"
+        [rows]="10"
+        responsiveLayout="scroll"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th style="width: 160px;">Rol</th>
+            <th style="width: 160px;" class="text-right">Acciones</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-row>
+          <tr>
+            <td>{{ row.name }}</td>
+            <td>{{ row.email }}</td>
+            <td>
+              <span class="font-semibold">{{ row.role }}</span>
+            </td>
+            <td class="text-right">
+              <button pButton class="p-button-text" icon="pi pi-pencil" (click)="openEdit(row)"></button>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4">
+              <div class="text-center p-4 text-600">
+                No hay usuarios.
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Dialog -->
+    <p-dialog
+      [(visible)]="dialogVisible"
+      [modal]="true"
+      [draggable]="false"
+      [resizable]="false"
+      [style]="{ width: '560px' }"
+      [header]="dialogTitle()"
+    >
+      <form [formGroup]="form" class="flex flex-column gap-3">
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <div class="flex flex-column gap-2">
+              <label>Nombre</label>
+              <input pInputText formControlName="name" />
+            </div>
+          </div>
+
+          <div class="col-12 md:col-6">
+            <div class="flex flex-column gap-2">
+              <label>Email</label>
+              <input pInputText formControlName="email" />
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-column gap-2">
+          <label>Rol</label>
+          <p-select
+            [options]="roleOptions"
+            optionLabel="label"
+            optionValue="value"
+            formControlName="role"
+            placeholder="Selecciona rol"
+          ></p-select>
+        </div>
+
+        <!-- Solo en create se pide password -->
+        <div class="flex flex-column gap-2" *ngIf="!editingId">
+          <label>Contraseña</label>
+          <p-password
+            formControlName="password"
+            [feedback]="false"
+            [toggleMask]="true"
+          ></p-password>
+        </div>
+      </form>
+
+      <ng-template pTemplate="footer">
+        <div class="flex justify-content-end gap-2">
+          <button pButton class="p-button-text" label="Cancelar" (click)="dialogVisible=false"></button>
+          <button pButton label="Guardar" (click)="save()" [disabled]="form.invalid || saving()"></button>
+        </div>
+      </ng-template>
+    </p-dialog>

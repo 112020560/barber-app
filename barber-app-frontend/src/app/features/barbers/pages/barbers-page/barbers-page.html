@@ -1,0 +1,120 @@
+<p-toast></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+
+    <div class="flex flex-column gap-3">
+      <!-- Header -->
+      <div class="flex align-items-center justify-content-between">
+        <div>
+          <h2 class="m-0">Barberos</h2>
+          <small class="text-600">Asignación de usuarios barberos a barberías</small>
+        </div>
+
+        <div class="flex gap-2">
+          <p-select
+            [options]="barberShops()"
+            optionLabel="name"
+            optionValue="id"
+            [(ngModel)]="selectedBarberShopId"
+            placeholder="Selecciona barbería"
+            [style]="{ minWidth: '260px' }"
+            (onChange)="loadBarbers()"
+          ></p-select>
+
+          <button
+            pButton
+            icon="pi pi-plus"
+            label="Nuevo"
+            (click)="openCreate()"
+            [disabled]="!selectedBarberShopId"
+          ></button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <p-table
+        [value]="barbers()"
+        [loading]="loading()"
+        [paginator]="true"
+        [rows]="10"
+        responsiveLayout="scroll"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th style="width: 160px;" class="text-right">Acciones</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-row>
+          <tr>
+            <td>{{ row.user?.name ?? row.userId }}</td>
+            <td>{{ row.user?.email ?? '-' }}</td>
+            <td class="text-right">
+              <button
+                pButton
+                class="p-button-text p-button-danger"
+                icon="pi pi-trash"
+                (click)="confirmDelete(row)"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3">
+              <div class="text-center p-4 text-600">
+                No hay barberos asignados para esta barbería.
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Dialog -->
+    <p-dialog
+      [(visible)]="dialogVisible"
+      [modal]="true"
+      [draggable]="false"
+      [resizable]="false"
+      [style]="{ width: '520px' }"
+      header="Asignar barbero"
+    >
+      <div class="flex flex-column gap-3">
+        <div class="flex flex-column gap-2">
+          <label>Barbería</label>
+          <p-select
+            [options]="barberShops()"
+            optionLabel="name"
+            optionValue="id"
+            [(ngModel)]="createBarberShopId"
+            placeholder="Selecciona barbería"
+          ></p-select>
+        </div>
+
+        <div class="flex flex-column gap-2">
+          <label>Usuario (rol BARBER)</label>
+          <p-select
+            [options]="users()"
+            optionLabel="name"
+            optionValue="id"
+            [(ngModel)]="createUserId"
+            placeholder="Selecciona usuario"
+            [filter]="true"
+          ></p-select>
+
+          <small class="text-600">
+            Si no te aparece un usuario aquí, créalo en Users con rol BARBER.
+          </small>
+        </div>
+      </div>
+
+      <ng-template pTemplate="footer">
+        <div class="flex justify-content-end gap-2">
+          <button pButton class="p-button-text" label="Cancelar" (click)="dialogVisible=false"></button>
+          <button pButton label="Guardar" (click)="save()" [disabled]="saving() || !createUserId || !createBarberShopId"></button>
+        </div>
+      </ng-template>
+    </p-dialog>

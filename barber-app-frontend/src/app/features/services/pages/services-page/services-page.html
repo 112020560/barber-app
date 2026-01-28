@@ -1,0 +1,144 @@
+<p-toast></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+
+    <div class="flex flex-column gap-3">
+      <!-- Header -->
+      <div class="flex align-items-center justify-content-between">
+        <div>
+          <h2 class="m-0">Servicios</h2>
+          <small class="text-600">Administra los servicios por barbería</small>
+        </div>
+
+        <div class="flex gap-2">
+          <p-select
+            [options]="barberShops()"
+            optionLabel="name"
+            optionValue="id"
+            [(ngModel)]="selectedBarberShopId"
+            placeholder="Selecciona barbería"
+            [style]="{ minWidth: '260px' }"
+            (onChange)="loadServices()"
+          ></p-select>
+
+          <button
+            pButton
+            icon="pi pi-plus"
+            label="Nuevo"
+            (click)="openCreate()"
+            [disabled]="!selectedBarberShopId"
+          ></button>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div class="flex justify-content-end">
+        <span class="p-input-icon-left w-full md:w-20rem">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" class="w-full" placeholder="Buscar..."
+                 (input)="filter = $any($event.target).value" />
+        </span>
+      </div>
+
+      <!-- Table -->
+      <p-table
+        [value]="filteredServices()"
+        [loading]="loading()"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        responsiveLayout="scroll"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Nombre</th>
+            <th style="width: 140px;">Precio</th>
+            <th style="width: 160px;">Duración</th>
+            <th style="width: 160px;" class="text-right">Acciones</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-row>
+          <tr>
+            <td>{{ row.name }}</td>
+            <td>₡ {{ row.price }}</td>
+            <td>{{ row.durationMin }} min</td>
+            <td class="text-right">
+              <button pButton class="p-button-text" icon="pi pi-pencil" (click)="openEdit(row)"></button>
+              <button pButton class="p-button-text p-button-danger" icon="pi pi-trash" (click)="confirmDelete(row)"></button>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4">
+              <div class="text-center p-4 text-600">
+                No hay servicios para mostrar.
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Dialog -->
+    <p-dialog
+      [(visible)]="dialogVisible"
+      [modal]="true"
+      [draggable]="false"
+      [resizable]="false"
+      [style]="{ width: '520px' }"
+      [header]="dialogTitle()"
+    >
+      <form [formGroup]="form" class="flex flex-column gap-3">
+        <div class="flex flex-column gap-2">
+          <label>Barbería</label>
+          <p-select
+            [options]="barberShops()"
+            optionLabel="name"
+            optionValue="id"
+            formControlName="barberShopId"
+            placeholder="Selecciona barbería"
+          ></p-select>
+        </div>
+
+        <div class="flex flex-column gap-2">
+          <label>Nombre</label>
+          <input pInputText formControlName="name" placeholder="Ej: Corte clásico" />
+        </div>
+
+        <div class="grid">
+          <div class="col-6">
+            <div class="flex flex-column gap-2">
+              <label>Precio</label>
+              <p-inputNumber
+                formControlName="price"
+                mode="decimal"
+                [min]="0"
+                [minFractionDigits]="2"
+                [maxFractionDigits]="2"
+                placeholder="₡"
+              ></p-inputNumber>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="flex flex-column gap-2">
+              <label>Duración (min)</label>
+              <p-inputNumber
+                formControlName="durationMin"
+                [min]="1"
+                [max]="480"
+              ></p-inputNumber>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <ng-template pTemplate="footer">
+        <div class="flex justify-content-end gap-2">
+          <button pButton class="p-button-text" label="Cancelar" (click)="dialogVisible=false"></button>
+          <button pButton label="Guardar" (click)="save()" [disabled]="form.invalid || saving()"></button>
+        </div>
+      </ng-template>
+    </p-dialog>
