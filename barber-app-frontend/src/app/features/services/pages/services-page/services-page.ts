@@ -12,6 +12,7 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { BarberShopDto, BarberShopsApiService } from '../../../../core/services/barber-shops-api.service';
 import { ServiceDto, ServicesApiService } from '../../../../core/services/services-api.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-services-page',
@@ -56,12 +57,16 @@ export class ServicesPage implements OnInit {
     return items.filter(x => x.name.toLowerCase().includes(f));
   });
 
+  // Para OWNER: ocultar selector de barbería
+  isOwner = computed(() => this.auth.userRole() === 'OWNER');
+
   constructor(
     private fb: FormBuilder,
     private barberShopsApi: BarberShopsApiService,
     private servicesApi: ServicesApiService,
     private msg: MessageService,
     private confirm: ConfirmationService,
+    private auth: AuthService,
   ) {
     this.form = this.fb.group({
       barberShopId: [null, Validators.required],
@@ -72,7 +77,13 @@ export class ServicesPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadBarberShops();
+    // Si es OWNER, usar su barberShopId directamente
+    if (this.auth.userRole() === 'OWNER') {
+      this.selectedBarberShopId = this.auth.barberShopId();
+      this.loadServices();
+    } else {
+      this.loadBarberShops();
+    }
   }
 
   loadBarberShops() {

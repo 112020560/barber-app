@@ -1,0 +1,101 @@
+<p-dialog
+  header="Iniciar sesion para confirmar"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '400px' }"
+  (onHide)="onHide()">
+
+  <p-tabs value="0">
+    <p-tablist>
+      <p-tab value="0">Iniciar Sesion</p-tab>
+      <p-tab value="1">Registrarse</p-tab>
+    </p-tablist>
+
+    <p-tabpanels>
+      <!-- Login Tab -->
+      <p-tabpanel value="0">
+        <form [formGroup]="loginForm" (ngSubmit)="submitLogin()" class="flex flex-column gap-3 pt-3">
+          <div class="flex flex-column gap-2">
+            <label for="login-email">Email</label>
+            <input
+              pInputText
+              id="login-email"
+              formControlName="email"
+              type="email"
+              placeholder="tu@email.com" />
+          </div>
+
+          <div class="flex flex-column gap-2">
+            <label for="login-password">Contrasena</label>
+            <p-password
+              id="login-password"
+              formControlName="password"
+              [feedback]="false"
+              [toggleMask]="true"
+              styleClass="w-full"
+              inputStyleClass="w-full">
+            </p-password>
+          </div>
+
+          @if (error) {
+            <small class="text-red-500">{{ error }}</small>
+          }
+
+          <p-button
+            type="submit"
+            label="Iniciar Sesion"
+            [loading]="loading"
+            styleClass="w-full">
+          </p-button>
+        </form>
+      </p-tabpanel>
+
+      <!-- Register Tab -->
+      <p-tabpanel value="1">
+        <form [formGroup]="registerForm" (ngSubmit)="submitRegister()" class="flex flex-column gap-3 pt-3">
+          <div class="flex flex-column gap-2">
+            <label for="register-name">Nombre</label>
+            <input
+              pInputText
+              id="register-name"
+              formControlName="name"
+              type="text"
+              placeholder="Tu nombre" />
+          </div>
+
+          <div class="flex flex-column gap-2">
+            <label for="register-email">Email</label>
+            <input
+              pInputText
+              id="register-email"
+              formControlName="email"
+              type="email"
+              placeholder="tu@email.com" />
+          </div>
+
+          <div class="flex flex-column gap-2">
+            <label for="register-password">Contrasena</label>
+            <p-password
+              id="register-password"
+              formControlName="password"
+              [toggleMask]="true"
+              styleClass="w-full"
+              inputStyleClass="w-full">
+            </p-password>
+          </div>
+
+          @if (error) {
+            <small class="text-red-500">{{ error }}</small>
+          }
+
+          <p-button
+            type="submit"
+            label="Registrarse"
+            [loading]="loading"
+            styleClass="w-full">
+          </p-button>
+        </form>
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</p-dialog>

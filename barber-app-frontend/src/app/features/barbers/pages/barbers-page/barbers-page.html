@@ -10,15 +10,17 @@
         </div>
 
         <div class="flex gap-2">
-          <p-select
-            [options]="barberShops()"
-            optionLabel="name"
-            optionValue="id"
-            [(ngModel)]="selectedBarberShopId"
-            placeholder="Selecciona barbería"
-            [style]="{ minWidth: '260px' }"
-            (onChange)="loadBarbers()"
-          ></p-select>
+          @if (!isOwner()) {
+            <p-select
+              [options]="barberShops()"
+              optionLabel="name"
+              optionValue="id"
+              [(ngModel)]="selectedBarberShopId"
+              placeholder="Selecciona barbería"
+              [style]="{ minWidth: '260px' }"
+              (onChange)="loadBarbers()"
+            ></p-select>
+          }
 
           <button
             pButton
@@ -83,16 +85,18 @@
       header="Asignar barbero"
     >
       <div class="flex flex-column gap-3">
-        <div class="flex flex-column gap-2">
-          <label>Barbería</label>
-          <p-select
-            [options]="barberShops()"
-            optionLabel="name"
-            optionValue="id"
-            [(ngModel)]="createBarberShopId"
-            placeholder="Selecciona barbería"
-          ></p-select>
-        </div>
+        @if (!isOwner()) {
+          <div class="flex flex-column gap-2">
+            <label>Barbería</label>
+            <p-select
+              [options]="barberShops()"
+              optionLabel="name"
+              optionValue="id"
+              [(ngModel)]="createBarberShopId"
+              placeholder="Selecciona barbería"
+            ></p-select>
+          </div>
+        }
 
         <div class="flex flex-column gap-2">
           <label>Usuario (rol BARBER)</label>

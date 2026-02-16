@@ -2,7 +2,9 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsString,
+  IsUUID,
   MinLength,
 } from 'class-validator';
 import { UserRole } from '../entities/user.entity';
@@ -21,4 +23,8 @@ export class CreateUserDto {
 
   @IsEnum(UserRole)
   role: UserRole;
+
+  @IsOptional()
+  @IsUUID()
+  barberShopId?: string;
 }

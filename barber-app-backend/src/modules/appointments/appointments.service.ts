@@ -52,6 +52,7 @@ export class AppointmentsService {
         barberId,
         date: Between(start, end),
       },
+      relations: ['service', 'client'],
       order: { date: 'ASC' },
     });
   }

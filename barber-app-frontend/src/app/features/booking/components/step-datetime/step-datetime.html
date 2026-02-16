@@ -1,0 +1,44 @@
+<div class="grid">
+  <div class="col-12 md:col-6">
+    <div class="flex justify-content-center">
+      <p-datepicker
+        [(ngModel)]="dateValue"
+        [minDate]="minDate"
+        [inline]="true"
+        (onSelect)="onDateSelect($event)">
+      </p-datepicker>
+    </div>
+  </div>
+
+  <div class="col-12 md:col-6">
+    <h3 class="mt-0">Horarios disponibles</h3>
+
+    @if (loading) {
+      <div class="flex justify-content-center p-5">
+        <p-progressSpinner strokeWidth="4" animationDuration="1s"></p-progressSpinner>
+      </div>
+    } @else if (!dateValue) {
+      <div class="text-500 p-3">
+        Selecciona una fecha para ver los horarios disponibles
+      </div>
+    } @else if (slots.length === 0) {
+      <div class="text-500 p-3">
+        No hay horarios disponibles para esta fecha
+      </div>
+    } @else {
+      <div class="grid">
+        @for (slot of slots; track slot) {
+          <div class="col-4 md:col-3">
+            <p-button
+              [label]="slot"
+              [severity]="isTimeSelected(slot) ? 'primary' : 'secondary'"
+              [outlined]="!isTimeSelected(slot)"
+              styleClass="w-full"
+              (onClick)="selectTime(slot)">
+            </p-button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -11,6 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { BarberShopDto, BarberShopsApiService } from '../../../../core/services/barber-shops-api.service';
 import { UserDto, UsersApiService } from '../../../../core/services/users-api.service';
 import { BarberDto, BarbersApiService } from '../../../../core/services/barbers-api.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-barbers-page',
@@ -44,16 +45,26 @@ export class BarbersPage {
   createUserId: string | null = null;
   createBarberShopId: string | null = null;
 
+  // Para OWNER: ocultar selector de barbería
+  isOwner = computed(() => this.auth.userRole() === 'OWNER');
+
   constructor(
     private barberShopsApi: BarberShopsApiService,
     private usersApi: UsersApiService,
     private barbersApi: BarbersApiService,
     private msg: MessageService,
     private confirm: ConfirmationService,
+    private auth: AuthService,
   ) {}
 
   ngOnInit(): void {
-    this.loadBarberShops();
+    // Si es OWNER, usar su barberShopId directamente
+    if (this.auth.userRole() === 'OWNER') {
+      this.selectedBarberShopId = this.auth.barberShopId();
+      this.loadBarbers();
+    } else {
+      this.loadBarberShops();
+    }
     this.loadUsers();
   }
 

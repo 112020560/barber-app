@@ -1,0 +1,75 @@
+@if (loading()) {
+  <div class="flex justify-content-center p-5">
+    <p-progressSpinner />
+  </div>
+} @else if (error()) {
+  <div class="text-center text-red-500 p-3">{{ error() }}</div>
+} @else if (stats(); as data) {
+  <div class="grid">
+    <!-- KPI Cards -->
+    <div class="col-12 md:col-6 lg:col-3">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Total Barberías</div>
+          <div class="text-3xl font-bold text-primary">{{ data.totalBarberShops }}</div>
+        </div>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-6 lg:col-3">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Citas Hoy</div>
+          <div class="text-3xl font-bold text-green-500">{{ data.todayAppointmentsCount }}</div>
+        </div>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-6 lg:col-3">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Citas Semana</div>
+          <div class="text-3xl font-bold text-blue-500">{{ data.weekAppointmentsCount }}</div>
+        </div>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-6 lg:col-3">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Ingresos Totales</div>
+          <div class="text-3xl font-bold text-orange-500">{{ data.totalRevenue | currency:'USD' }}</div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Charts -->
+    <div class="col-12 md:col-6">
+      <p-card header="Usuarios por Rol">
+        @if (usersByRoleChartData()) {
+          <div style="height: 300px">
+            <p-chart type="pie" [data]="usersByRoleChartData()!" [options]="chartOptions" />
+          </div>
+        }
+      </p-card>
+    </div>
+    <div class="col-12 md:col-6">
+      <p-card header="Citas por Barbería">
+        @if (appointmentsByShopChartData()) {
+          <div style="height: 300px">
+            <p-chart type="bar" [data]="appointmentsByShopChartData()!" [options]="chartOptions" />
+          </div>
+        }
+      </p-card>
+    </div>
+
+    <!-- Additional Stats -->
+    <div class="col-12">
+      <p-card header="Resumen Mensual">
+        <div class="flex justify-content-around">
+          <div class="text-center">
+            <div class="text-500 mb-2">Citas del Mes</div>
+            <div class="text-2xl font-bold">{{ data.monthAppointmentsCount }}</div>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+}

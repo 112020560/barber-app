@@ -1,1 +1,23 @@
-<p>dashboard works!</p>
+<div class="p-4">
+  <h2 class="mb-4">Dashboard</h2>
+
+  @switch (userRole()) {
+    @case ('ADMIN') {
+      <app-admin-dashboard />
+    }
+    @case ('OWNER') {
+      <app-owner-dashboard />
+    }
+    @case ('BARBER') {
+      <app-barber-dashboard />
+    }
+    @case ('CLIENT') {
+      <app-client-dashboard />
+    }
+    @default {
+      <div class="text-center text-500 p-5">
+        No se pudo determinar el rol del usuario
+      </div>
+    }
+  }
+</div>

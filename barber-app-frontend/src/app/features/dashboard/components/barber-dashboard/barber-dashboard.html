@@ -1,0 +1,69 @@
+@if (loading()) {
+  <div class="flex justify-content-center p-5">
+    <p-progressSpinner />
+  </div>
+} @else if (error()) {
+  <div class="text-center text-red-500 p-3">{{ error() }}</div>
+} @else if (stats(); as data) {
+  <div class="grid">
+    <!-- KPI Cards -->
+    <div class="col-12 md:col-6 lg:col-3">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Citas Hoy</div>
+          <div class="text-3xl font-bold text-primary">{{ data.todayAppointmentsCount }}</div>
+        </div>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-6 lg:col-3">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Completadas Semana</div>
+          <div class="text-3xl font-bold text-green-500">{{ data.weekCompletedCount }}</div>
+        </div>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-6 lg:col-3">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Completadas Mes</div>
+          <div class="text-3xl font-bold text-blue-500">{{ data.monthCompletedCount }}</div>
+        </div>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-6 lg:col-3">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Clientes Atendidos</div>
+          <div class="text-3xl font-bold text-purple-500">{{ data.clientsServedCount }}</div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Upcoming Appointments Table -->
+    <div class="col-12">
+      <p-card header="Próximas Citas">
+        @if (data.upcomingAppointments.length > 0) {
+          <p-table [value]="data.upcomingAppointments" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template #header>
+              <tr>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Servicio</th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-apt>
+              <tr>
+                <td>{{ formatDate(apt.date) }}</td>
+                <td>{{ apt.clientName }}</td>
+                <td>{{ apt.serviceName }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        } @else {
+          <div class="text-center text-500 p-3">No hay citas próximas</div>
+        }
+      </p-card>
+    </div>
+  </div>
+}

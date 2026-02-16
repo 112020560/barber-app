@@ -26,7 +26,7 @@ export class AppointmentsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN', 'BARBER')
+  @Roles('ADMIN', 'BARBER', 'OWNER')
   @Get('barber/:barberId')
   getAgenda(@Param('barberId') barberId: string, @Query('day') day: string) {
     return this.service.getAgenda(barberId, day);

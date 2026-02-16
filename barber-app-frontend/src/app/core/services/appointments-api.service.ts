@@ -4,6 +4,13 @@ import { environment } from '../../../environments/environment';
 
 export type AppointmentStatus = 'PENDING' | 'CONFIRMED' | 'CANCELLED';
 
+export interface CreateAppointmentDto {
+  barberId: string;
+  serviceId: string;
+  clientId: string;
+  date: string; // ISO format: YYYY-MM-DDTHH:mm:ss
+}
+
 export interface AppointmentDto {
   id: string;
   barberId: string;
@@ -31,5 +38,9 @@ export class AppointmentsApiService {
 
   updateStatus(id: string, status: AppointmentStatus) {
     return this.http.patch<AppointmentDto>(`${this.base}/${id}/status`, { status });
+  }
+
+  create(dto: CreateAppointmentDto) {
+    return this.http.post<AppointmentDto>(this.base, dto);
   }
 }

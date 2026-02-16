@@ -1,0 +1,27 @@
+<div class="grid">
+  @for (barber of barbers; track barber.id) {
+    <div class="col-12 md:col-6 lg:col-4">
+      <p-card
+        [styleClass]="isSelected(barber) ? 'border-primary cursor-pointer' : 'cursor-pointer'"
+        (click)="selectBarber(barber)">
+        <ng-template pTemplate="content">
+          <div class="flex flex-column align-items-center gap-3">
+            <p-avatar
+              [label]="getInitials(barber.user?.name || 'BB')"
+              size="xlarge"
+              shape="circle"
+              [style]="{ 'background-color': isSelected(barber) ? 'var(--primary-color)' : 'var(--surface-300)', 'color': isSelected(barber) ? 'var(--primary-color-text)' : 'var(--text-color)' }">
+            </p-avatar>
+            <span class="text-xl font-semibold">{{ barber.user?.name || 'Barbero' }}</span>
+          </div>
+        </ng-template>
+      </p-card>
+    </div>
+  }
+</div>
+
+@if (barbers.length === 0) {
+  <div class="text-center text-500 p-5">
+    No hay barberos disponibles
+  </div>
+}

@@ -1,0 +1,30 @@
+<div class="grid">
+  @for (service of services; track service.id) {
+    <div class="col-12 md:col-6 lg:col-4">
+      <p-card
+        [styleClass]="isSelected(service) ? 'border-primary cursor-pointer' : 'cursor-pointer'"
+        (click)="selectService(service)">
+        <ng-template pTemplate="header">
+          <div class="p-3 text-center">
+            <i class="pi pi-scissors text-4xl text-primary"></i>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="title">
+          {{ service.name }}
+        </ng-template>
+        <ng-template pTemplate="content">
+          <div class="flex justify-content-between align-items-center">
+            <span class="text-500">{{ service.durationMin }} min</span>
+            <span class="text-xl font-bold text-primary">${{ service.price }}</span>
+          </div>
+        </ng-template>
+      </p-card>
+    </div>
+  }
+</div>
+
+@if (services.length === 0) {
+  <div class="text-center text-500 p-5">
+    No hay servicios disponibles
+  </div>
+}

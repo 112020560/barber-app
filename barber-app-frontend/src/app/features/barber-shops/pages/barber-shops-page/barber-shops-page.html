@@ -1,1 +1,121 @@
-<p>barber-shops-page works!</p>
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="flex flex-column gap-3">
+  <!-- Header -->
+  <div class="flex align-items-center justify-content-between">
+    <div>
+      <h2 class="m-0">Barberías</h2>
+      <small class="text-600">Gestiona las barberías del sistema</small>
+    </div>
+
+    <p-button
+      label="Nueva Barbería"
+      icon="pi pi-plus"
+      (onClick)="openNew()">
+    </p-button>
+  </div>
+
+  <!-- Table -->
+  <p-table
+    [value]="barberShops()"
+    [loading]="loading()"
+    [paginator]="true"
+    [rows]="10"
+    responsiveLayout="scroll">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nombre</th>
+        <th>Dirección</th>
+        <th>Teléfono</th>
+        <th style="width: 150px;" class="text-right">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-shop>
+      <tr>
+        <td class="font-semibold">{{ shop.name }}</td>
+        <td>{{ shop.address }}</td>
+        <td>{{ shop.phone }}</td>
+        <td class="text-right">
+          <p-button
+            icon="pi pi-pencil"
+            [rounded]="true"
+            [text]="true"
+            severity="info"
+            (onClick)="openEdit(shop)">
+          </p-button>
+          <p-button
+            icon="pi pi-trash"
+            [rounded]="true"
+            [text]="true"
+            severity="danger"
+            (onClick)="confirmDelete(shop)">
+          </p-button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4">
+          <div class="text-center p-4 text-600">
+            No hay barberías registradas.
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Modal -->
+<p-dialog
+  [header]="editingId ? 'Editar Barbería' : 'Nueva Barbería'"
+  [(visible)]="showModal"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+  (onHide)="closeModal()">
+
+  <div class="flex flex-column gap-3">
+    <div class="flex flex-column gap-2">
+      <label for="name">Nombre</label>
+      <input
+        pInputText
+        id="name"
+        [(ngModel)]="form.name"
+        placeholder="Nombre de la barbería" />
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="address">Dirección</label>
+      <input
+        pInputText
+        id="address"
+        [(ngModel)]="form.address"
+        placeholder="Dirección completa" />
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="phone">Teléfono</label>
+      <input
+        pInputText
+        id="phone"
+        [(ngModel)]="form.phone"
+        placeholder="+1 234 567 8900" />
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancelar"
+      severity="secondary"
+      (onClick)="closeModal()">
+    </p-button>
+    <p-button
+      [label]="editingId ? 'Actualizar' : 'Crear'"
+      [loading]="saving"
+      (onClick)="save()">
+    </p-button>
+  </ng-template>
+</p-dialog>

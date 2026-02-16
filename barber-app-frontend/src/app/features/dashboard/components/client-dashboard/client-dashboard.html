@@ -1,0 +1,75 @@
+@if (loading()) {
+  <div class="flex justify-content-center p-5">
+    <p-progressSpinner />
+  </div>
+} @else if (error()) {
+  <div class="text-center text-red-500 p-3">{{ error() }}</div>
+} @else if (stats(); as data) {
+  <div class="grid">
+    <!-- KPI Cards -->
+    <div class="col-12 md:col-6 lg:col-4">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Total Visitas</div>
+          <div class="text-3xl font-bold text-primary">{{ data.totalVisits }}</div>
+        </div>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-6 lg:col-4">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Barberías Visitadas</div>
+          <div class="text-3xl font-bold text-purple-500">{{ data.barberShopsVisited }}</div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Upcoming Appointment Highlight -->
+    <div class="col-12 lg:col-4">
+      <p-card header="Próxima Cita" styleClass="h-full">
+        @if (data.upcomingAppointment; as apt) {
+          <div class="flex flex-column gap-2">
+            <div class="text-xl font-bold text-primary">{{ formatDate(apt.date) }}</div>
+            <div><span class="text-500">Barbero:</span> {{ apt.barberName }}</div>
+            <div><span class="text-500">Servicio:</span> {{ apt.serviceName }}</div>
+            <div><span class="text-500">Barbería:</span> {{ apt.shopName }}</div>
+          </div>
+        } @else {
+          <div class="text-center text-500 p-3">No tienes citas programadas</div>
+        }
+      </p-card>
+    </div>
+
+    <!-- Recent Appointments Table -->
+    <div class="col-12">
+      <p-card header="Historial Reciente">
+        @if (data.recentAppointments.length > 0) {
+          <p-table [value]="data.recentAppointments" [tableStyle]="{ 'min-width': '60rem' }">
+            <ng-template #header>
+              <tr>
+                <th>Fecha</th>
+                <th>Barbería</th>
+                <th>Barbero</th>
+                <th>Servicio</th>
+                <th>Estado</th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-apt>
+              <tr>
+                <td>{{ formatDate(apt.date) }}</td>
+                <td>{{ apt.shopName }}</td>
+                <td>{{ apt.barberName }}</td>
+                <td>{{ apt.serviceName }}</td>
+                <td>
+                  <p-tag [value]="getStatusLabel(apt.status)" [severity]="getStatusSeverity(apt.status)" />
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        } @else {
+          <div class="text-center text-500 p-3">Sin historial de citas</div>
+        }
+      </p-card>
+    </div>
+  </div>
+}

@@ -21,7 +21,8 @@ import { MenuItem } from 'primeng/api';
 export class Shell {
   sidebarOpen = signal(false);
 
-  menu = computed<MenuItem[]>(() => [
+  // Menu for ADMIN and BARBER
+  adminMenu = computed<MenuItem[]>(() => [
     {
       label: 'Dashboard',
       icon: 'pi pi-home',
@@ -59,6 +60,75 @@ export class Shell {
       command: () => this.closeSidebar(),
     },
   ]);
+
+  // Menu for OWNER (solo su barbería)
+  ownerMenu = computed<MenuItem[]>(() => [
+    {
+      label: 'Dashboard',
+      icon: 'pi pi-home',
+      routerLink: '/app/dashboard',
+      command: () => this.closeSidebar(),
+    },
+    {
+      label: 'Barberos',
+      icon: 'pi pi-users',
+      routerLink: '/app/barbers',
+      command: () => this.closeSidebar(),
+    },
+    {
+      label: 'Servicios',
+      icon: 'pi pi-briefcase',
+      routerLink: '/app/services',
+      command: () => this.closeSidebar(),
+    },
+    {
+      label: 'Citas',
+      icon: 'pi pi-calendar',
+      routerLink: '/app/appointments',
+      command: () => this.closeSidebar(),
+    },
+  ]);
+
+  // Menu for BARBER (solo sus citas)
+  barberMenu = computed<MenuItem[]>(() => [
+    {
+      label: 'Dashboard',
+      icon: 'pi pi-home',
+      routerLink: '/app/dashboard',
+      command: () => this.closeSidebar(),
+    },
+    {
+      label: 'Citas',
+      icon: 'pi pi-calendar',
+      routerLink: '/app/appointments',
+      command: () => this.closeSidebar(),
+    },
+  ]);
+
+  // Menu for CLIENT
+  clientMenu = computed<MenuItem[]>(() => [
+    {
+      label: 'Reservar Cita',
+      icon: 'pi pi-calendar-plus',
+      routerLink: '/app/reservar',
+      command: () => this.closeSidebar(),
+    },
+  ]);
+
+  // Select menu based on role
+  menu = computed<MenuItem[]>(() => {
+    const role = this.auth.userRole();
+    if (role === 'CLIENT') {
+      return this.clientMenu();
+    }
+    if (role === 'OWNER') {
+      return this.ownerMenu();
+    }
+    if (role === 'BARBER') {
+      return this.barberMenu();
+    }
+    return this.adminMenu();
+  });
 
   constructor(
     private auth: AuthService,

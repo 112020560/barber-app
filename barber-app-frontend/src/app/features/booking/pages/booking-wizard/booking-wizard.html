@@ -1,0 +1,125 @@
+<p-toast></p-toast>
+
+<div class="booking-container">
+  @if (loading) {
+    <div class="flex justify-content-center align-items-center" style="min-height: 400px;">
+      <p-progressSpinner strokeWidth="4" animationDuration="1s"></p-progressSpinner>
+    </div>
+  } @else if (showAuthModal && !barberShop) {
+    <div class="text-center p-5">
+      <i class="pi pi-lock text-6xl text-primary mb-3"></i>
+      <h2>Inicia sesion para continuar</h2>
+      <p class="text-500">Necesitas una cuenta para reservar tu cita.</p>
+    </div>
+  } @else if (!barberShop) {
+    <div class="text-center p-5">
+      <i class="pi pi-exclamation-circle text-6xl text-red-500 mb-3"></i>
+      <h2>Barberia no encontrada</h2>
+      <p class="text-500">La barberia que buscas no existe o no esta disponible.</p>
+    </div>
+  } @else {
+    <div class="text-center mb-4">
+      <h1 class="m-0">{{ barberShop.name }}</h1>
+      <p class="text-500 mt-2">{{ barberShop.address }}</p>
+    </div>
+
+    <!-- Steps indicator -->
+    <div class="flex justify-content-center mb-4">
+      <div class="flex gap-2 align-items-center">
+        @for (step of ['Servicio', 'Barbero', 'Fecha/Hora', 'Confirmar']; track step; let i = $index) {
+          <div class="flex align-items-center">
+            <div
+              class="step-indicator"
+              [class.active]="activeStep === i"
+              [class.completed]="activeStep > i">
+              {{ i + 1 }}
+            </div>
+            <span class="ml-2 mr-3" [class.font-bold]="activeStep === i">{{ step }}</span>
+            @if (i < 3) {
+              <i class="pi pi-chevron-right text-400"></i>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Step content -->
+    <div class="step-content">
+      @switch (activeStep) {
+        @case (0) {
+          <h2>Selecciona un servicio</h2>
+          <app-step-service
+            [services]="services"
+            [selectedService]="booking.service"
+            (serviceSelected)="onServiceSelected($event)">
+          </app-step-service>
+        }
+        @case (1) {
+          <h2>Selecciona un barbero</h2>
+          <app-step-barber
+            [barbers]="barbers"
+            [selectedBarber]="booking.barber"
+            (barberSelected)="onBarberSelected($event)">
+          </app-step-barber>
+
+          <div class="flex justify-content-start mt-4">
+            <p-button
+              label="Anterior"
+              severity="secondary"
+              icon="pi pi-arrow-left"
+              (onClick)="goBack()">
+            </p-button>
+          </div>
+        }
+        @case (2) {
+          <h2>Selecciona fecha y hora</h2>
+          <app-step-datetime
+            [barberId]="booking.barber?.id || null"
+            [serviceId]="booking.service?.id || null"
+            [selectedDate]="booking.date"
+            [selectedTime]="booking.time"
+            (dateTimeSelected)="onDateTimeSelected($event)">
+          </app-step-datetime>
+
+          <div class="flex justify-content-start mt-4">
+            <p-button
+              label="Anterior"
+              severity="secondary"
+              icon="pi pi-arrow-left"
+              (onClick)="goBack()">
+            </p-button>
+          </div>
+        }
+        @case (3) {
+          <h2>Confirma tu reserva</h2>
+          <app-step-confirm
+            [booking]="booking"
+            [barberShop]="barberShop">
+          </app-step-confirm>
+
+          <div class="flex justify-content-between mt-4">
+            <p-button
+              label="Anterior"
+              severity="secondary"
+              icon="pi pi-arrow-left"
+              (onClick)="goBack()">
+            </p-button>
+
+            <p-button
+              label="Confirmar Reserva"
+              icon="pi pi-check"
+              [loading]="submitting"
+              (onClick)="confirmBooking()">
+            </p-button>
+          </div>
+        }
+      }
+    </div>
+  }
+</div>
+
+<app-auth-modal
+  [(visible)]="showAuthModal"
+  (authenticated)="onAuthenticated()"
+  (closed)="onAuthModalHide()">
+</app-auth-modal>

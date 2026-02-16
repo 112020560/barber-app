@@ -7,6 +7,7 @@ export interface CreateUserDto {
   email: string;
   password: string;
   role: string;
+  barberShopId?: string;
 }
 
 export interface UserDto {
@@ -14,6 +15,7 @@ export interface UserDto {
   name: string;
   email: string;
   role: string;
+  barberShopId?: string;
 }
 
 export interface UpdateUserDto {
@@ -38,6 +40,6 @@ export class UsersApiService {
   }
 
   create(dto: CreateUserDto) {
-    return this.http.post<UserDto>(`${environment.apiUrl}/auth`, dto);
+    return this.http.post<UserDto>(`${environment.apiUrl}/auth/register`, dto);
   }
 }

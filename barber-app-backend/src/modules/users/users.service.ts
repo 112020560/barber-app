@@ -27,7 +27,7 @@ export class UsersService {
   async findAll(role?: UserRole) {
     const query = this.repo
       .createQueryBuilder('u')
-      .select(['u.id', 'u.name', 'u.email', 'u.role', 'u.createdAt'])
+      .select(['u.id', 'u.name', 'u.email', 'u.role', 'u.barberShopId', 'u.createdAt'])
       .orderBy('u.createdAt', 'DESC');
 
     if (role) query.where('u.role = :role', { role });
@@ -38,7 +38,7 @@ export class UsersService {
   async findOne(id: string) {
     const user = await this.repo.findOne({
       where: { id },
-      select: ['id', 'name', 'email', 'role', 'createdAt'],
+      select: ['id', 'name', 'email', 'role', 'barberShopId', 'createdAt'],
     });
 
     if (!user) throw new NotFoundException('User not found');

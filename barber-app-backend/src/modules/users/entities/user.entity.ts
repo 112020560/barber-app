@@ -1,8 +1,10 @@
-import { Column, Entity, Index } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../common/entities/base.entity';
+import { BarberShopEntity } from '../../barber-shops/entities/barber-shop.entity';
 
 export enum UserRole {
   ADMIN = 'ADMIN',
+  OWNER = 'OWNER',
   BARBER = 'BARBER',
   CLIENT = 'CLIENT',
 }
@@ -21,4 +23,12 @@ export class UserEntity extends BaseEntity {
 
   @Column({ type: 'enum', enum: UserRole })
   role: UserRole;
+
+  // Solo para OWNER - la barbería que gestiona
+  @Column({ name: 'barber_shop_id', type: 'uuid', nullable: true })
+  barberShopId: string | null;
+
+  @ManyToOne(() => BarberShopEntity, { nullable: true })
+  @JoinColumn({ name: 'barber_shop_id' })
+  barberShop: BarberShopEntity;
 }

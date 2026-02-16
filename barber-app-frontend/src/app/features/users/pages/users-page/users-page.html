@@ -99,6 +99,21 @@
           ></p-select>
         </div>
 
+        <!-- Selector de barbería solo para OWNER -->
+        @if (form.get('role')?.value === 'OWNER') {
+          <div class="flex flex-column gap-2">
+            <label>Barbería asignada</label>
+            <p-select
+              [options]="barberShops()"
+              optionLabel="name"
+              optionValue="id"
+              formControlName="barberShopId"
+              placeholder="Selecciona barbería"
+            ></p-select>
+            <small class="text-600">El OWNER gestionará los barberos y servicios de esta barbería</small>
+          </div>
+        }
+
         <!-- Solo en create se pide password -->
         <div class="flex flex-column gap-2" *ngIf="!editingId">
           <label>Contraseña</label>

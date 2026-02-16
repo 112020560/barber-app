@@ -30,6 +30,7 @@ export class AuthService {
       email: dto.email,
       passwordHash,
       role: dto.role,
+      barberShopId: dto.barberShopId || null,
     });
 
     return this.signToken(user);
@@ -53,6 +54,7 @@ export class AuthService {
     const payload = {
       sub: user.id,
       role: user.role,
+      barberShopId: user.barberShopId,
     };
 
     return {

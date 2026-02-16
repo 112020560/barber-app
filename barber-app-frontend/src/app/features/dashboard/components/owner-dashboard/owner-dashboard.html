@@ -1,0 +1,72 @@
+@if (loading()) {
+  <div class="flex justify-content-center p-5">
+    <p-progressSpinner />
+  </div>
+} @else if (error()) {
+  <div class="text-center text-red-500 p-3">{{ error() }}</div>
+} @else if (stats(); as data) {
+  <div class="grid">
+    <!-- KPI Cards -->
+    <div class="col-12 md:col-6 lg:col-3">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Barberos</div>
+          <div class="text-3xl font-bold text-primary">{{ data.barbersCount }}</div>
+        </div>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-6 lg:col-3">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Servicios</div>
+          <div class="text-3xl font-bold text-purple-500">{{ data.servicesCount }}</div>
+        </div>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-6 lg:col-3">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Citas Hoy</div>
+          <div class="text-3xl font-bold text-green-500">{{ data.todayAppointmentsCount }}</div>
+        </div>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-6 lg:col-3">
+      <p-card>
+        <div class="text-center">
+          <div class="text-500 mb-2">Ingresos</div>
+          <div class="text-3xl font-bold text-orange-500">{{ data.revenue | currency:'USD' }}</div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Appointments Summary -->
+    <div class="col-12 md:col-6">
+      <p-card header="Resumen de Citas">
+        <div class="flex flex-column gap-3">
+          <div class="flex justify-content-between align-items-center">
+            <span class="text-500">Citas Semana</span>
+            <span class="text-xl font-bold text-blue-500">{{ data.weekAppointmentsCount }}</span>
+          </div>
+          <div class="flex justify-content-between align-items-center">
+            <span class="text-500">Citas Mes</span>
+            <span class="text-xl font-bold text-indigo-500">{{ data.monthAppointmentsCount }}</span>
+          </div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Chart -->
+    <div class="col-12 md:col-6">
+      <p-card header="Citas por Barbero">
+        @if (appointmentsByBarberChartData()) {
+          <div style="height: 250px">
+            <p-chart type="bar" [data]="appointmentsByBarberChartData()!" [options]="chartOptions" />
+          </div>
+        } @else {
+          <div class="text-center text-500 p-3">Sin datos de barberos</div>
+        }
+      </p-card>
+    </div>
+  </div>
+}

@@ -11,6 +11,7 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { UserDto, UsersApiService } from '../../../../core/services/users-api.service';
 import { UserRole } from '../../../../core/models/user-role';
+import { BarberShopDto, BarberShopsApiService } from '../../../../core/services/barber-shops-api.service';
 
 @Component({
   selector: 'app-users-page',
@@ -36,6 +37,7 @@ export class UsersPage implements OnInit {
   saving = signal(false);
 
   users = signal<UserDto[]>([]);
+  barberShops = signal<BarberShopDto[]>([]);
   filter = '';
 
   dialogVisible = false;
@@ -43,6 +45,7 @@ export class UsersPage implements OnInit {
 
   roleOptions = [
     { label: 'ADMIN', value: 'ADMIN' },
+    { label: 'OWNER', value: 'OWNER' },
     { label: 'BARBER', value: 'BARBER' },
     { label: 'CLIENT', value: 'CLIENT' },
   ];
@@ -50,6 +53,9 @@ export class UsersPage implements OnInit {
   form: any
 
   dialogTitle = computed(() => (this.editingId ? 'Editar usuario' : 'Nuevo usuario'));
+
+  // Mostrar selector de barbería solo para OWNER
+  isOwnerSelected = computed(() => this.form?.get('role')?.value === 'OWNER');
 
   filteredUsers = computed(() => {
     const f = this.filter.trim().toLowerCase();
@@ -66,6 +72,7 @@ export class UsersPage implements OnInit {
   constructor(
     private fb: FormBuilder,
     private api: UsersApiService,
+    private barberShopsApi: BarberShopsApiService,
     private msg: MessageService,
   ) {
     this.form = this.fb.group({
@@ -73,11 +80,19 @@ export class UsersPage implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       role: ['CLIENT', Validators.required],
       password: [''],
+      barberShopId: [null],
     });
   }
 
   ngOnInit(): void {
     this.loadUsers();
+    this.loadBarberShops();
+  }
+
+  loadBarberShops() {
+    this.barberShopsApi.list().subscribe({
+      next: (res) => this.barberShops.set(res),
+    });
   }
 
   loadUsers() {
@@ -97,6 +112,7 @@ export class UsersPage implements OnInit {
       email: '',
       role: 'CLIENT',
       password: '',
+      barberShopId: null,
     });
 
     // en create, password requerido
@@ -113,6 +129,7 @@ export class UsersPage implements OnInit {
       email: user.email,
       role: user.role as UserRole,
       password: '',
+      barberShopId: user.barberShopId || null,
     });
 
     // en edit, password NO requerido
@@ -140,6 +157,7 @@ export class UsersPage implements OnInit {
           email: v.email!,
           role: v.role!,
           password: v.password!,
+          barberShopId: v.role === 'OWNER' ? v.barberShopId : undefined,
         });
 
     req.subscribe({

@@ -1,3 +1,5 @@
+import { BarberWorkingHourEntity } from './../modules/availability/entities/barber-working-hour.entity';
+import { BarberTimeBlockEntity } from './../modules/availability/entities/barber-time-block.entity';
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
 
@@ -20,6 +22,8 @@ export const AppDataSource = new DataSource({
     BarberEntity,
     ServiceEntity,
     AppointmentEntity,
+    BarberTimeBlockEntity,
+    BarberWorkingHourEntity,
   ],
   migrations: ['dist/database/migrations/*.js'],
 });

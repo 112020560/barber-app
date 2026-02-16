@@ -1,0 +1,52 @@
+.booking-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.step-content {
+  padding: 1rem 0;
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.step-indicator {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--surface-200);
+  color: var(--text-color-secondary);
+  font-weight: bold;
+  transition: all 0.2s;
+
+  &.active {
+    background-color: var(--primary-color);
+    color: white;
+  }
+
+  &.completed {
+    background-color: var(--green-500);
+    color: white;
+  }
+}
+
+:host ::ng-deep {
+  .p-card {
+    transition: border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+
+    &.border-primary {
+      border: 2px solid var(--primary-color);
+    }
+  }
+}

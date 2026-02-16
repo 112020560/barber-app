@@ -1,0 +1,48 @@
+<p-card header="Resumen de tu reserva">
+  <ng-template pTemplate="content">
+    @if (booking && barberShop) {
+      <div class="flex flex-column gap-3">
+        <div class="flex justify-content-between">
+          <span class="text-500">Barberia</span>
+          <span class="font-semibold">{{ barberShop.name }}</span>
+        </div>
+
+        <p-divider></p-divider>
+
+        <div class="flex justify-content-between">
+          <span class="text-500">Servicio</span>
+          <span class="font-semibold">{{ booking.service?.name }}</span>
+        </div>
+
+        <div class="flex justify-content-between">
+          <span class="text-500">Precio</span>
+          <span class="font-semibold text-primary">${{ booking.service?.price }}</span>
+        </div>
+
+        <div class="flex justify-content-between">
+          <span class="text-500">Duracion</span>
+          <span class="font-semibold">{{ booking.service?.durationMin }} minutos</span>
+        </div>
+
+        <p-divider></p-divider>
+
+        <div class="flex justify-content-between">
+          <span class="text-500">Barbero</span>
+          <span class="font-semibold">{{ booking.barber?.user?.name || 'Barbero' }}</span>
+        </div>
+
+        <p-divider></p-divider>
+
+        <div class="flex justify-content-between">
+          <span class="text-500">Fecha</span>
+          <span class="font-semibold">{{ formatDate(booking.date) }}</span>
+        </div>
+
+        <div class="flex justify-content-between">
+          <span class="text-500">Hora</span>
+          <span class="font-semibold">{{ booking.time }}</span>
+        </div>
+      </div>
+    }
+  </ng-template>
+</p-card>

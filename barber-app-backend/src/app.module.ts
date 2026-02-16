@@ -10,6 +10,7 @@ import { ServicesModule } from './modules/services/services.module';
 import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AvailabilityModule } from './modules/availability/availability.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 console.log('DATABASE_URL =>', process.env.DATABASE_URL);
 
@@ -38,6 +39,7 @@ console.log('DATABASE_URL =>', process.env.DATABASE_URL);
     AppointmentsModule,
     AuthModule,
     AvailabilityModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
