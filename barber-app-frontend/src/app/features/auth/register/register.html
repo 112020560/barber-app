@@ -1,0 +1,54 @@
+<div class="flex align-items-center justify-content-center min-h-screen p-3">
+  <p-card header="Crear cuenta" styleClass="w-full md:w-30rem">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-column gap-3">
+
+      @if (error()) {
+        <p-message severity="error" [text]="error()!" />
+      }
+
+      <div class="flex flex-column gap-2">
+        <label>Nombre completo</label>
+        <input pInputText formControlName="name" placeholder="Juan Pérez" />
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label>Email</label>
+        <input pInputText formControlName="email" placeholder="correo@ejemplo.com" />
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label>Contraseña</label>
+        <p-password
+          formControlName="password"
+          [toggleMask]="true"
+          promptLabel="Ingresa una contraseña"
+          weakLabel="Débil"
+          mediumLabel="Media"
+          strongLabel="Fuerte"
+        />
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label>Confirmar contraseña</label>
+        <p-password
+          formControlName="confirmPassword"
+          [feedback]="false"
+          [toggleMask]="true"
+        />
+      </div>
+
+      <button
+        pButton
+        type="submit"
+        label="Registrarse"
+        [disabled]="form.invalid || loading()"
+        [loading]="loading()"
+      ></button>
+
+      <div class="text-center">
+        <span class="text-500">¿Ya tienes cuenta? </span>
+        <a routerLink="/login" class="text-primary no-underline font-medium">Inicia sesión</a>
+      </div>
+    </form>
+  </p-card>
+</div>

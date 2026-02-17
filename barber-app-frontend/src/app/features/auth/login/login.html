@@ -12,6 +12,11 @@
       </div>
 
       <button pButton type="submit" label="Entrar" [disabled]="form.invalid || loading"></button>
+
+      <div class="text-center">
+        <span class="text-500">¿No tienes cuenta? </span>
+        <a routerLink="/register" class="text-primary no-underline font-medium">Regístrate</a>
+      </div>
     </form>
   </p-card>
 </div>

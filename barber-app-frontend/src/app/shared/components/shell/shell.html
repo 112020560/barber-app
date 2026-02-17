@@ -1,3 +1,5 @@
+<p-toast />
+
 <div class="layout">
 
   <!-- TOPBAR -->
@@ -13,8 +15,21 @@
       <span class="app-title">Barber App</span>
     </div>
 
-    <div class="p-toolbar-group-right flex align-items-center gap-2">
-      <p-avatar label="F" shape="circle"></p-avatar>
+    <div class="p-toolbar-group-right flex align-items-center gap-3">
+      <!-- Notification Bell -->
+      <div class="relative">
+        <button
+          pButton
+          class="p-button-text p-button-plain"
+          icon="pi pi-bell"
+          (click)="op.toggle($event)"
+        ></button>
+        @if (unreadCount() > 0) {
+          <p-badge [value]="unreadCount().toString()" severity="danger" class="notification-badge" />
+        }
+      </div>
+
+      <p-avatar label="U" shape="circle"></p-avatar>
       <button
         pButton
         class="p-button-text"
@@ -24,6 +39,59 @@
       ></button>
     </div>
   </p-toolbar>
+
+  <!-- Notifications Popover -->
+  <p-popover #op [style]="{ width: '320px' }">
+    <div class="flex justify-content-between align-items-center mb-3">
+      <span class="font-bold">Notificaciones</span>
+      @if (unreadCount() > 0) {
+        <button
+          pButton
+          class="p-button-text p-button-sm"
+          label="Marcar leídas"
+          (click)="markAllAsRead()"
+        ></button>
+      }
+    </div>
+
+    @if (notificationsList().length === 0) {
+      <div class="text-center text-500 py-3">
+        No hay notificaciones
+      </div>
+    } @else {
+      <div class="flex flex-column gap-2" style="max-height: 300px; overflow-y: auto;">
+        @for (notification of notificationsList(); track notification.id) {
+          <div
+            class="p-3 border-round cursor-pointer hover:surface-hover"
+            [class.surface-100]="!notification.read"
+            (click)="notifications.markAsRead(notification.id)"
+          >
+            <div class="flex align-items-center gap-2 mb-1">
+              @switch (notification.type) {
+                @case ('APPOINTMENT_CREATED') {
+                  <i class="pi pi-calendar-plus text-blue-500"></i>
+                }
+                @case ('APPOINTMENT_CONFIRMED') {
+                  <i class="pi pi-check-circle text-green-500"></i>
+                }
+                @case ('APPOINTMENT_CANCELLED') {
+                  <i class="pi pi-times-circle text-red-500"></i>
+                }
+                @default {
+                  <i class="pi pi-bell text-500"></i>
+                }
+              }
+              <span class="font-semibold text-sm">{{ notification.title }}</span>
+            </div>
+            <div class="text-sm text-600">{{ notification.message }}</div>
+            <div class="text-xs text-400 mt-1">
+              {{ notification.createdAt | date:'short' }}
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </p-popover>
 
   <!-- BODY -->
   <div class="body">

@@ -32,6 +32,10 @@ export class BarbersApiService {
     return this.http.get<BarberDto[]>(`${this.base}?barberShopId=${barberShopId}`);
   }
 
+  getByUserId(userId: string) {
+    return this.http.get<BarberDto>(`${this.base}/by-user/${userId}`);
+  }
+
   create(dto: CreateBarberDto) {
     return this.http.post<BarberDto>(this.base, dto);
   }

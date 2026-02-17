@@ -57,3 +57,10 @@
     transform: translateX(0);
   }
 }
+
+/* Notification badge */
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+}

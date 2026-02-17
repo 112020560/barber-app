@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login';
+import { RegisterComponent } from './features/auth/register/register';
 import { Shell } from './shared/components/shell/shell';
 import { authGuard } from './core/guards/auth.guard';
 import { Dashboard } from './features/dashboard/dashboard';
@@ -10,9 +11,11 @@ import { AppointmentsPage } from './features/appointments/pages/appointments-pag
 import { UsersPage } from './features/users/pages/users-page/users-page';
 import { BookingWizard } from './features/booking/pages/booking-wizard/booking-wizard';
 import { ClientHome } from './features/client/client-home';
+import { SchedulePage } from './features/schedule/pages/schedule-page/schedule-page';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   { path: 'reservar/:barberShopId', component: BookingWizard },
 
   {
@@ -27,6 +30,7 @@ export const routes: Routes = [
       { path: 'services', component: ServicesPage },
       { path: 'appointments', component: AppointmentsPage },
       { path: 'users', component: UsersPage },
+      { path: 'schedule', component: SchedulePage },
       // Client routes
       { path: 'reservar', component: ClientHome },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
