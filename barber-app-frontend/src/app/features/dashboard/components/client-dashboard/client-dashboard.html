@@ -1,3 +1,6 @@
+<p-toast />
+<p-confirmDialog />
+
 @if (loading()) {
   <div class="flex justify-content-center p-5">
     <p-progressSpinner />
@@ -33,6 +36,14 @@
             <div><span class="text-500">Barbero:</span> {{ apt.barberName }}</div>
             <div><span class="text-500">Servicio:</span> {{ apt.serviceName }}</div>
             <div><span class="text-500">Barbería:</span> {{ apt.shopName }}</div>
+            <p-button
+              label="Cancelar cita"
+              icon="pi pi-times"
+              severity="danger"
+              [outlined]="true"
+              styleClass="w-full mt-2"
+              (onClick)="cancelAppointment(apt.id)"
+            />
           </div>
         } @else {
           <div class="text-center text-500 p-3">No tienes citas programadas</div>
@@ -52,6 +63,7 @@
                 <th>Barbero</th>
                 <th>Servicio</th>
                 <th>Estado</th>
+                <th>Acción</th>
               </tr>
             </ng-template>
             <ng-template #body let-apt>
@@ -62,6 +74,17 @@
                 <td>{{ apt.serviceName }}</td>
                 <td>
                   <p-tag [value]="getStatusLabel(apt.status)" [severity]="getStatusSeverity(apt.status)" />
+                </td>
+                <td>
+                  @if (apt.status === 'PENDING' || apt.status === 'CONFIRMED') {
+                    <p-button
+                      icon="pi pi-times"
+                      [rounded]="true"
+                      [text]="true"
+                      severity="danger"
+                      (onClick)="cancelAppointment(apt.id)"
+                    />
+                  }
                 </td>
               </tr>
             </ng-template>

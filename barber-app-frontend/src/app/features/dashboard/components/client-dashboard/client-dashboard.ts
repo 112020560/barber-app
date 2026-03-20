@@ -4,13 +4,19 @@ import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DashboardApiService } from '../../../../core/services/dashboard-api.service';
+import { AppointmentsApiService } from '../../../../core/services/appointments-api.service';
 import { ClientStats } from '../../models/dashboard-stats.model';
 
 @Component({
   selector: 'app-client-dashboard',
   standalone: true,
-  imports: [CommonModule, CardModule, TableModule, TagModule, ProgressSpinnerModule],
+  imports: [CommonModule, CardModule, TableModule, TagModule, ProgressSpinnerModule, ButtonModule, ToastModule, ConfirmDialogModule],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './client-dashboard.html',
 })
 export class ClientDashboard implements OnInit {
@@ -18,7 +24,12 @@ export class ClientDashboard implements OnInit {
   loading = signal(true);
   error = signal<string | null>(null);
 
-  constructor(private dashboardApi: DashboardApiService) {}
+  constructor(
+    private dashboardApi: DashboardApiService,
+    private appointmentsApi: AppointmentsApiService,
+    private msg: MessageService,
+    private confirm: ConfirmationService,
+  ) {}
 
   ngOnInit() {
     this.loadStats();
@@ -35,6 +46,28 @@ export class ClientDashboard implements OnInit {
         this.error.set('Error al cargar estadísticas');
         this.loading.set(false);
         console.error(err);
+      },
+    });
+  }
+
+  cancelAppointment(id: string): void {
+    this.confirm.confirm({
+      header: 'Cancelar cita',
+      message: '¿Seguro que deseas cancelar esta cita?',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí, cancelar',
+      rejectLabel: 'No',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        this.appointmentsApi.updateStatus(id, 'CANCELLED').subscribe({
+          next: () => {
+            this.msg.add({ severity: 'success', summary: 'OK', detail: 'Cita cancelada correctamente' });
+            this.loadStats();
+          },
+          error: () => {
+            this.msg.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cancelar la cita' });
+          },
+        });
       },
     });
   }

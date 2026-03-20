@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { BarberEntity } from '../barbers/entities/barber.entity';
 import { UserEntity } from '../users/entities/user.entity';
 import { ServiceEntity } from '../services/entities/service.entity';
+import { JwtPayload } from '../../common/decorators/current-user.decorator';
 
 @Injectable()
 export class AppointmentsService {
@@ -77,7 +79,7 @@ export class AppointmentsService {
     });
   }
 
-  async updateStatus(id: string, status: AppointmentStatus) {
+  async updateStatus(id: string, status: AppointmentStatus, currentUser: JwtPayload) {
     const appointment = await this.repo.findOne({
       where: { id },
       relations: [
@@ -93,11 +95,18 @@ export class AppointmentsService {
       throw new NotFoundException('Appointment not found');
     }
 
+    if (currentUser.role === 'CLIENT' && appointment.clientId !== currentUser.userId) {
+      throw new ForbiddenException('No puedes modificar citas de otros clientes');
+    }
+
     const previousStatus = appointment.status;
     appointment.status = status;
     const saved = await this.repo.save(appointment);
 
-    // Emit notification events based on status change
+    let cancelledBy: 'CLIENT' | 'BARBER' | 'OWNER' = 'BARBER';
+    if (currentUser.role === 'CLIENT') cancelledBy = 'CLIENT';
+    else if (currentUser.role === 'OWNER') cancelledBy = 'OWNER';
+
     try {
       if (
         status === AppointmentStatus.CONFIRMED &&
@@ -105,7 +114,7 @@ export class AppointmentsService {
       ) {
         await this.emitAppointmentConfirmedEvent(appointment);
       } else if (status === AppointmentStatus.CANCELLED) {
-        await this.emitAppointmentCancelledEvent(appointment, 'BARBER'); // Default to barber, could be enhanced
+        await this.emitAppointmentCancelledEvent(appointment, cancelledBy);
       }
     } catch (error) {
       console.error('Error emitting notification event:', error);

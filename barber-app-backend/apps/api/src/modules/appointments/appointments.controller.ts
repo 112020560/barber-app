@@ -14,6 +14,7 @@ import { UpdateAppointmentStatusDto } from './dto/update-appointment-status.dto'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
 
 @Controller('appointments')
 export class AppointmentsController {
@@ -37,7 +38,8 @@ export class AppointmentsController {
   updateStatus(
     @Param('id') id: string,
     @Body() dto: UpdateAppointmentStatusDto,
+    @CurrentUser() currentUser: JwtPayload,
   ) {
-    return this.service.updateStatus(id, dto.status);
+    return this.service.updateStatus(id, dto.status, currentUser);
   }
 }
