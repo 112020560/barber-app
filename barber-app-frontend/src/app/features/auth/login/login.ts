@@ -24,6 +24,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class LoginComponent {
   loading = false;
+  errorMessage = '';
   form: any;
 
 
@@ -45,6 +46,7 @@ export class LoginComponent {
     if (this.form.invalid) return;
 
     this.loading = true;
+    this.errorMessage = '';
 
     this.http
       .post<{ accessToken: string }>(`${environment.apiUrl}/auth/login`, this.form.value)
@@ -53,7 +55,10 @@ export class LoginComponent {
           this.auth.setToken(res.accessToken);
           this.router.navigateByUrl('/app');
         },
-        error: () => (this.loading = false),
+        error: () => {
+          this.loading = false;
+          this.errorMessage = 'Credenciales incorrectas. Verifica tu email y contraseña.';
+        },
         complete: () => (this.loading = false),
       });
   }

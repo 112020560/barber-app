@@ -8,8 +8,12 @@
 
       <div class="flex flex-column gap-2">
         <label>Contraseña</label>
-        <p-password formControlName="password" [feedback]="false" [toggleMask]="true"></p-password>
+        <p-password formControlName="password" [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full" />
       </div>
+
+      @if (errorMessage) {
+        <small class="p-error">{{ errorMessage }}</small>
+      }
 
       <button pButton type="submit" label="Entrar" [disabled]="form.invalid || loading"></button>
 
