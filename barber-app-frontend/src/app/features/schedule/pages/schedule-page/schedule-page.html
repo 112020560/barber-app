@@ -198,6 +198,7 @@
           dateFormat="dd/mm/yy"
           [minDate]="today"
           styleClass="w-full"
+          appendTo="body"
         />
       </div>
 
@@ -209,6 +210,7 @@
           dateFormat="dd/mm/yy"
           [minDate]="blockStartDate || today"
           styleClass="w-full"
+          appendTo="body"
         />
       </div>
     } @else {
@@ -218,9 +220,11 @@
           [(ngModel)]="blockStartDate"
           [showIcon]="true"
           [showTime]="true"
+          [hideOnDateTimeSelect]="false"
           dateFormat="dd/mm/yy"
           [minDate]="today"
           styleClass="w-full"
+          appendTo="body"
         />
       </div>
 
@@ -230,9 +234,11 @@
           [(ngModel)]="blockEndDate"
           [showIcon]="true"
           [showTime]="true"
+          [hideOnDateTimeSelect]="false"
           dateFormat="dd/mm/yy"
           [minDate]="blockStartDate || today"
           styleClass="w-full"
+          appendTo="body"
         />
       </div>
     }
