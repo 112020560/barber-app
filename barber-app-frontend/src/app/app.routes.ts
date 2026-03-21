@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login';
 import { RegisterComponent } from './features/auth/register/register';
+import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password';
+import { ResetPasswordComponent } from './features/auth/reset-password/reset-password';
 import { Shell } from './shared/components/shell/shell';
 import { authGuard } from './core/guards/auth.guard';
 import { Dashboard } from './features/dashboard/dashboard';
@@ -16,6 +18,8 @@ import { SchedulePage } from './features/schedule/pages/schedule-page/schedule-p
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'reservar/:barberShopId', component: BookingWizard },
 
   {

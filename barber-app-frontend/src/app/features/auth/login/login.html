@@ -9,6 +9,9 @@
       <div class="flex flex-column gap-2">
         <label>Contraseña</label>
         <p-password formControlName="password" [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full" />
+        <div class="text-right">
+          <a routerLink="/forgot-password" class="text-primary no-underline text-sm">¿Olvidaste tu contraseña?</a>
+        </div>
       </div>
 
       @if (errorMessage) {

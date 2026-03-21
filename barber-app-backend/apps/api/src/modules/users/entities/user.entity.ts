@@ -24,6 +24,12 @@ export class UserEntity extends BaseEntity {
   @Column({ type: 'enum', enum: UserRole })
   role: UserRole;
 
+  @Column({ name: 'reset_token', type: 'varchar', nullable: true })
+  resetToken: string | null;
+
+  @Column({ name: 'reset_token_expiry', type: 'timestamptz', nullable: true })
+  resetTokenExpiry: Date | null;
+
   // Solo para OWNER - la barbería que gestiona
   @Column({ name: 'barber_shop_id', type: 'uuid', nullable: true })
   barberShopId: string | null;
