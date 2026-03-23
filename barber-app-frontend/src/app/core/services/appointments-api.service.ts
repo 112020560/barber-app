@@ -36,6 +36,11 @@ export class AppointmentsApiService {
     return this.http.get<AppointmentDto[]>(`${this.base}/barber/${barberId}?day=${day}`);
   }
 
+  // GET /appointments/barber/:barberId/week?from=YYYY-MM-DD
+  getWeekAgenda(barberId: string, from: string) {
+    return this.http.get<AppointmentDto[]>(`${this.base}/barber/${barberId}/week?from=${from}`);
+  }
+
   updateStatus(id: string, status: AppointmentStatus) {
     return this.http.patch<AppointmentDto>(`${this.base}/${id}/status`, { status });
   }

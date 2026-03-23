@@ -114,6 +114,12 @@ export class Shell implements OnInit, OnDestroy {
       command: () => this.closeSidebar(),
     },
     {
+      label: 'Mi Semana',
+      icon: 'pi pi-calendar',
+      routerLink: '/app/semana',
+      command: () => this.closeSidebar(),
+    },
+    {
       label: 'Mi Horario',
       icon: 'pi pi-clock',
       routerLink: '/app/schedule',
@@ -121,7 +127,7 @@ export class Shell implements OnInit, OnDestroy {
     },
     {
       label: 'Citas',
-      icon: 'pi pi-calendar',
+      icon: 'pi pi-calendar-plus',
       routerLink: '/app/appointments',
       command: () => this.closeSidebar(),
     },

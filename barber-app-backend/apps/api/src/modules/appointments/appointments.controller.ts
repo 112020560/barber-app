@@ -36,6 +36,13 @@ export class AppointmentsController {
     return this.service.getAgenda(barberId, day);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN', 'BARBER', 'OWNER')
+  @Get('barber/:barberId/week')
+  getWeekAgenda(@Param('barberId') barberId: string, @Query('from') from: string) {
+    return this.service.getWeekAgenda(barberId, from);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Patch(':id/status')
   updateStatus(

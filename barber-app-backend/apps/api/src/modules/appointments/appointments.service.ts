@@ -79,6 +79,22 @@ export class AppointmentsService {
     });
   }
 
+  async getWeekAgenda(barberId: string, from: string) {
+    const start = new Date(`${from}T00:00:00`);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 6);
+    end.setHours(23, 59, 59, 999);
+
+    return this.repo.find({
+      where: {
+        barberId,
+        date: Between(start, end),
+      },
+      relations: ['service', 'client'],
+      order: { date: 'ASC' },
+    });
+  }
+
   async updateStatus(id: string, status: AppointmentStatus, currentUser: JwtPayload) {
     const appointment = await this.repo.findOne({
       where: { id },

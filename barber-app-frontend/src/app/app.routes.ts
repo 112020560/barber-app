@@ -14,6 +14,7 @@ import { UsersPage } from './features/users/pages/users-page/users-page';
 import { BookingWizard } from './features/booking/pages/booking-wizard/booking-wizard';
 import { ClientHome } from './features/client/client-home';
 import { SchedulePage } from './features/schedule/pages/schedule-page/schedule-page';
+import { BarberWeekPage } from './features/appointments/pages/barber-week-page/barber-week-page';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -35,6 +36,7 @@ export const routes: Routes = [
       { path: 'appointments', component: AppointmentsPage },
       { path: 'users', component: UsersPage },
       { path: 'schedule', component: SchedulePage },
+      { path: 'semana', component: BarberWeekPage },
       // Client routes
       { path: 'reservar', component: ClientHome },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
